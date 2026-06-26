@@ -1,0 +1,31 @@
+export const businessInfo = {
+  name: "Cell & Sound",
+  tagline: "Your trusted spot for phones, sound, and accessories in Paarl",
+  phone: "021 872 3875",
+  whatsapp: "021 872 3875",
+  email: "info@cellandsound.co.za",
+  address: {
+    street: "Shop 3, Backmin Centre, Next To Debonairs Pizza, 41 Lady Grey St",
+    suburb: "",
+    city: "Paarl",
+    province: "Western Cape",
+    postalCode: "7646",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Cell+%26+Sound+41+Lady+Grey+St+Paarl+7646",
+    embedUrl: "https://www.google.com/maps?q=Cell+%26+Sound+41+Lady+Grey+St+Paarl+7646&output=embed",
+  },
+  hours: {
+    monday: { open: "9:00 am", close: "5:00 pm", closed: false },
+    tuesday: { open: "9:00 am", close: "5:00 pm", closed: false },
+    wednesday: { open: "9:00 am", close: "5:00 pm", closed: false },
+    thursday: { open: "9:00 am", close: "5:00 pm", closed: false },
+    friday: { open: "9:00 am", close: "5:00 pm", closed: false },
+    saturday: { open: "9:00 am", close: "1:00 pm", closed: false },
+    sunday: { open: "", close: "", closed: true },
+  },
+  rating: 3.04,
+  reviewCount: 0,
+  socialLinks: {
+    facebook: "",
+    instagram: "",
+  },
+};
