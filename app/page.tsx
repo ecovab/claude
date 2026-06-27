@@ -51,16 +51,19 @@ const SERVICES = [
 
 const PRODUCTS = [
   {
+    emoji: "🎧",
     title: "Wireless Headphones",
     category: "Audio",
     description: "Studio-grade cans with 40 hr battery life.",
   },
   {
+    emoji: "🔊",
     title: "Portable Speakers",
     category: "Audio",
     description: "Rugged Bluetooth speakers built to travel.",
   },
   {
+    emoji: "⌚",
     title: "Smartwatches",
     category: "Wearables",
     description: "Track, message, pay — all from your wrist.",
@@ -281,23 +284,32 @@ export default function Home() {
             <motion.div
               key={product.title}
               variants={itemVariants}
-              className="overflow-hidden rounded-2xl border border-border-color bg-surface"
+              style={{
+                background: "#1C1C1C",
+                borderRadius: 16,
+                padding: 28,
+                minHeight: 280,
+                border: "1px solid #2A2A2A",
+                transition: "all 0.3s",
+              }}
+              className="hover:!border-[#E8173A] hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(232,23,58,0.15)]"
             >
-              <div className="h-40 bg-gradient-to-br from-[#0d1626] to-[#1a2744]" />
-              <div className="p-6">
-                <span className="text-xs uppercase tracking-wide text-accent">
-                  {product.category}
-                </span>
-                <h3 className="mt-2 text-lg font-semibold text-foreground">
-                  {product.title}
-                </h3>
-                <p className="mt-2 text-sm text-text-muted">{product.description}</p>
-              </div>
+              <span className="mb-4 block text-[64px]">{product.emoji}</span>
+              <span
+                className="text-[11px] font-semibold uppercase tracking-[0.15em]"
+                style={{ color: "#E8173A" }}
+              >
+                {product.category}
+              </span>
+              <h3 className="mt-2 text-xl font-bold text-white">{product.title}</h3>
+              <p className="mt-2" style={{ color: "#888888" }}>
+                {product.description}
+              </p>
             </motion.div>
           ))}
         </div>
 
-        <motion.p variants={itemVariants} className="mt-8 text-sm text-text-muted">
+        <motion.p variants={itemVariants} className="mt-8 text-sm" style={{ color: "#888888" }}>
           Chargers · Cables · Cases · Screen protectors · Power banks · Earphones —
           pop in to see the full range.
         </motion.p>
