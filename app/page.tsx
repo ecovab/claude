@@ -2,14 +2,17 @@
 
 import { motion } from "framer-motion";
 import { businessInfo } from "@/lib/business-info";
-import { getWeeklyHours } from "@/lib/hours";
+import { getWeeklyHours, isOpenNow } from "@/lib/hours";
 import AnimatedSection, { itemVariants } from "@/components/AnimatedSection";
+import CountUpStat from "@/components/CountUpStat";
+import PhoneVisual from "@/components/PhoneVisual";
+import { useEffect, useState } from "react";
 
 const STATS = [
   { value: "98%", label: "First-fix rate" },
   { value: "12k+", label: "Devices Revived" },
-  { value: "60 min", label: "Avg Repair Time" },
-  { value: "90 day", label: "Workmanship Warranty" },
+  { value: "60", label: "Avg Repair Time (min)" },
+  { value: "90", label: "Workmanship Warranty (days)" },
   { value: "4.9★", label: "Local Rating" },
 ];
 
@@ -17,7 +20,7 @@ const SERVICES = [
   {
     title: "Screen Replacement",
     description:
-      "Cracked, dead pixels, ghost touch — we restore OEM-grade clarity on most makes and models.",
+      "Cracked, dead pixels, ghost touch — OEM-grade clarity on most makes and models.",
   },
   {
     title: "Battery Renewal",
@@ -51,19 +54,16 @@ const PRODUCTS = [
     title: "Wireless Headphones",
     category: "Audio",
     description: "Studio-grade cans with 40 hr battery life.",
-    gradient: "from-cyan-500/30 via-blue-500/20 to-transparent",
   },
   {
     title: "Portable Speakers",
     category: "Audio",
     description: "Rugged Bluetooth speakers built to travel.",
-    gradient: "from-teal-400/30 via-cyan-500/20 to-transparent",
   },
   {
     title: "Smartwatches",
     category: "Wearables",
     description: "Track, message, pay — all from your wrist.",
-    gradient: "from-blue-400/30 via-indigo-500/20 to-transparent",
   },
 ];
 
@@ -71,91 +71,120 @@ function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+function OpenBadge() {
+  const [open, setOpen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const tick = () => setOpen(isOpenNow());
+    tick();
+    const interval = setInterval(tick, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (open === null) return null;
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+        open
+          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+          : "border-red-500/30 bg-red-500/10 text-red-400"
+      }`}
+    >
+      <span className={`h-2 w-2 rounded-full ${open ? "bg-emerald-400" : "bg-red-400"}`} />
+      {open ? "Open Now" : "Closed"}
+    </span>
+  );
+}
+
 export default function Home() {
   const phoneHref = `tel:${businessInfo.phone.replace(/\s+/g, "")}`;
+  const whatsappNumber = businessInfo.whatsapp.replace(/\D/g, "");
   const weeklyHours = getWeeklyHours();
 
   return (
-    <div className="bg-[#0a0a0f] text-white">
+    <div className="bg-background text-foreground">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.12),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.12),transparent_45%)]" />
+      <section className="relative overflow-hidden border-b border-border-color">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,rgba(201,168,76,0.1),transparent_55%)]" />
 
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-24 sm:py-32">
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-4xl font-bold leading-tight tracking-tight sm:text-6xl"
-          >
-            Your phone,{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 sm:py-32 lg:grid-cols-2">
+          <div className="flex flex-col items-start gap-6">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-accent"
+            >
+              Paarl&apos;s #1 Repair Shop
+            </motion.span>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              className="text-5xl font-bold leading-tight tracking-tight text-foreground md:text-7xl"
+            >
+              Your phone,
+              <br />
               back to life.
-            </span>
-          </motion.h1>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-            className="max-w-xl text-lg text-white/60"
-          >
-            {businessInfo.name} is {businessInfo.address.city}&apos;s go-to for fast,
-            honest cellular repairs and the audio electronics worth listening to.
-            Walk-in welcome.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.24, ease: "easeOut" }}
-            className="flex flex-wrap gap-4"
-          >
-            <button
-              type="button"
-              onClick={() => scrollToId("services")}
-              className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-3 text-sm font-semibold text-[#0a0a0f] transition hover:opacity-90"
+            <motion.p
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+              className="max-w-xl text-lg text-text-muted"
             >
-              Book a Repair
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToId("visit")}
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-white transition hover:border-cyan-400 hover:text-cyan-400"
-            >
-              Get Directions →
-            </button>
-          </motion.div>
+              {businessInfo.name} is {businessInfo.address.city}&apos;s go-to for
+              fast, honest cellular repairs and audio electronics worth listening
+              to. Walk-in welcome.
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-            className="mt-4 grid w-full grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:grid-cols-5"
-          >
-            {STATS.map((stat) => (
-              <div key={stat.label}>
-                <div className="text-2xl font-bold text-cyan-400 sm:text-3xl">
-                  {stat.value}
-                </div>
-                <div className="mt-1 text-xs uppercase tracking-wide text-white/50">
-                  {stat.label}
-                </div>
-              </div>
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              className="flex flex-wrap gap-4"
+            >
+              <button
+                type="button"
+                onClick={() => scrollToId("services")}
+                className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-[#050b18] transition hover:opacity-90"
+              >
+                Book a Repair
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToId("visit")}
+                className="inline-flex items-center gap-2 rounded-full border border-border-color px-6 py-3 text-sm font-medium text-foreground transition hover:border-accent hover:text-accent"
+              >
+                Get Directions →
+              </button>
+            </motion.div>
+          </div>
+
+          <PhoneVisual />
+        </div>
+
+        {/* Stats bar */}
+        <div className="border-t border-border-color bg-surface">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 py-10 sm:grid-cols-5">
+            {STATS.map((stat, i) => (
+              <CountUpStat
+                key={stat.label}
+                value={stat.value}
+                label={stat.label}
+                delay={i * 0.08}
+              />
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Services */}
-      <AnimatedSection
-        id="services"
-        className="mx-auto max-w-6xl px-6 py-24"
-      >
-        <motion.p
-          variants={itemVariants}
-          className="font-mono text-sm text-cyan-400"
-        >
+      <AnimatedSection id="services" className="mx-auto max-w-6xl px-6 py-24">
+        <motion.p variants={itemVariants} className="font-mono text-sm text-accent">
           {"// What we fix"}
         </motion.p>
         <motion.h2
@@ -170,18 +199,18 @@ export default function Home() {
             <motion.div
               key={service.title}
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-400/40"
+              className="group relative overflow-hidden rounded-2xl border border-border-color bg-surface p-6 transition hover:border-accent/50"
             >
-              <span className="pointer-events-none absolute -right-2 -top-4 text-6xl font-bold text-white/[0.06] transition group-hover:text-cyan-400/10">
+              <span className="pointer-events-none absolute -right-2 -top-4 text-6xl font-bold text-border-color transition group-hover:text-accent/15">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="font-mono text-sm text-cyan-400">
+              <span className="font-mono text-sm text-accent">
                 {String(i + 1).padStart(2, "0")}→
               </span>
-              <h3 className="relative mt-3 text-lg font-semibold text-white">
+              <h3 className="relative mt-3 text-lg font-semibold text-foreground">
                 {service.title}
               </h3>
-              <p className="relative mt-2 text-sm text-white/60">
+              <p className="relative mt-2 text-sm text-text-muted">
                 {service.description}
               </p>
             </motion.div>
@@ -190,14 +219,14 @@ export default function Home() {
 
         <motion.div
           variants={itemVariants}
-          className="mt-12 flex flex-col items-center justify-between gap-6 rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 px-8 py-10 text-center sm:flex-row sm:text-left"
+          className="mt-12 flex flex-col items-center justify-between gap-6 rounded-2xl bg-accent px-8 py-10 text-center sm:flex-row sm:text-left"
         >
-          <h3 className="text-2xl font-bold">
+          <h3 className="text-2xl font-bold text-[#050b18]">
             Walk in. Walk out. Whole again.
           </h3>
           <a
             href={phoneHref}
-            className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-3 text-sm font-semibold text-[#0a0a0f] transition hover:opacity-90"
+            className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#050b18] px-6 py-3 text-sm font-semibold text-accent transition hover:opacity-90"
           >
             Call {businessInfo.phone} →
           </a>
@@ -205,9 +234,9 @@ export default function Home() {
       </AnimatedSection>
 
       {/* About */}
-      <AnimatedSection className="border-t border-white/10 bg-white/[0.02]">
+      <AnimatedSection id="about" className="border-t border-border-color bg-surface">
         <div className="mx-auto max-w-4xl px-6 py-24">
-          <motion.p variants={itemVariants} className="font-mono text-sm text-cyan-400">
+          <motion.p variants={itemVariants} className="font-mono text-sm text-accent">
             {"// Who we are"}
           </motion.p>
           <motion.h2
@@ -216,7 +245,7 @@ export default function Home() {
           >
             A small shop with serious skills.
           </motion.h2>
-          <motion.p variants={itemVariants} className="mt-6 text-lg text-white/65">
+          <motion.p variants={itemVariants} className="mt-6 text-lg text-text-muted">
             We&apos;re a local repair shop tucked into the Backmin Centre in the
             heart of {businessInfo.address.city}. For years we&apos;ve been the
             locals&apos; first call when something stops working — and the first
@@ -225,10 +254,10 @@ export default function Home() {
             devices.
           </motion.p>
           <motion.div variants={itemVariants} className="mt-8 flex flex-wrap gap-3">
-            <span className="rounded-full border border-white/15 px-4 py-1.5 text-xs uppercase tracking-wide text-white/60">
+            <span className="rounded-full border border-border-color bg-surface-muted px-4 py-1.5 text-xs uppercase tracking-wide text-accent">
               Based — {businessInfo.address.city}, ZA
             </span>
-            <span className="rounded-full border border-white/15 px-4 py-1.5 text-xs uppercase tracking-wide text-white/60">
+            <span className="rounded-full border border-border-color bg-surface-muted px-4 py-1.5 text-xs uppercase tracking-wide text-accent">
               Specialty — Repair · Retail
             </span>
           </motion.div>
@@ -236,8 +265,8 @@ export default function Home() {
       </AnimatedSection>
 
       {/* Products */}
-      <AnimatedSection className="mx-auto max-w-6xl px-6 py-24">
-        <motion.p variants={itemVariants} className="font-mono text-sm text-cyan-400">
+      <AnimatedSection id="products" className="mx-auto max-w-6xl px-6 py-24">
+        <motion.p variants={itemVariants} className="font-mono text-sm text-accent">
           {"// Also in store"}
         </motion.p>
         <motion.h2
@@ -252,75 +281,115 @@ export default function Home() {
             <motion.div
               key={product.title}
               variants={itemVariants}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]"
+              className="overflow-hidden rounded-2xl border border-border-color bg-surface"
             >
-              <div className={`h-40 bg-gradient-to-br ${product.gradient}`} />
+              <div className="h-40 bg-gradient-to-br from-[#0d1626] to-[#1a2744]" />
               <div className="p-6">
-                <span className="text-xs uppercase tracking-wide text-cyan-400">
+                <span className="text-xs uppercase tracking-wide text-accent">
                   {product.category}
                 </span>
-                <h3 className="mt-2 text-lg font-semibold text-white">
+                <h3 className="mt-2 text-lg font-semibold text-foreground">
                   {product.title}
                 </h3>
-                <p className="mt-2 text-sm text-white/60">{product.description}</p>
+                <p className="mt-2 text-sm text-text-muted">{product.description}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        <motion.p variants={itemVariants} className="mt-8 text-sm text-white/50">
+        <motion.p variants={itemVariants} className="mt-8 text-sm text-text-muted">
           Chargers · Cables · Cases · Screen protectors · Power banks · Earphones —
           pop in to see the full range.
         </motion.p>
       </AnimatedSection>
 
-      {/* Visit / Map */}
+      {/* Visit / Contact */}
       <AnimatedSection
         id="visit"
-        className="border-t border-white/10 bg-white/[0.02]"
+        className="border-t border-border-color bg-surface"
       >
         <div className="mx-auto max-w-6xl px-6 py-24">
-          <motion.p variants={itemVariants} className="font-mono text-sm text-cyan-400">
+          <motion.p variants={itemVariants} className="font-mono text-sm text-accent">
             {"// Drop in"}
           </motion.p>
           <motion.h2
             variants={itemVariants}
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
+            className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
-            Find us, call us, visit us.
+            Find us. Call us. Visit us.
           </motion.h2>
 
           <div className="mt-12 grid gap-10 lg:grid-cols-2">
-            <motion.div variants={itemVariants}>
-              <p className="text-white/70">
-                {businessInfo.address.street}, {businessInfo.address.city},{" "}
-                {businessInfo.address.province} {businessInfo.address.postalCode}
-              </p>
+            <motion.div variants={itemVariants} className="flex flex-col gap-8">
+              <OpenBadge />
 
-              <div className="mt-6 flex flex-wrap gap-4">
+              <div className="flex items-start gap-3 text-lg text-foreground">
+                <span aria-hidden>📍</span>
+                <span>
+                  Shop 3, Backmin Centre
+                  <br />
+                  Next to Debonairs Pizza
+                  <br />
+                  {businessInfo.address.street.split(",").slice(-1)[0]?.trim() ||
+                    "41 Lady Grey Street"}
+                  , {businessInfo.address.city}, {businessInfo.address.postalCode}
+                </span>
+              </div>
+
+              <a
+                href={phoneHref}
+                className="flex items-center gap-3 text-2xl font-semibold text-accent"
+              >
+                <span aria-hidden>📞</span>
+                {businessInfo.phone}
+              </a>
+
+              <a
+                href={`https://wa.me/${whatsappNumber}`}
+                className="flex items-center gap-3 text-lg text-foreground hover:text-accent"
+              >
+                <span aria-hidden>💬</span>
+                WhatsApp: {businessInfo.whatsapp}
+              </a>
+
+              <a
+                href={`mailto:${businessInfo.email}`}
+                className="flex items-center gap-3 text-lg text-foreground hover:text-accent"
+              >
+                <span aria-hidden>✉️</span>
+                {businessInfo.email}
+              </a>
+
+              <div className="flex flex-wrap gap-4">
                 <a
                   href={phoneHref}
-                  className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-6 py-3 text-sm font-semibold text-[#0a0a0f] transition hover:opacity-90"
+                  className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-[#050b18] transition hover:opacity-90"
                 >
-                  Call {businessInfo.phone}
+                  Call Now
                 </a>
                 <a
                   href={businessInfo.address.googleMapsUrl}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-white transition hover:border-cyan-400 hover:text-cyan-400"
+                  className="inline-flex items-center gap-2 rounded-full border border-border-color px-6 py-3 text-sm font-medium text-foreground transition hover:border-accent hover:text-accent"
                 >
-                  Directions Open in Maps →
+                  Open in Maps →
                 </a>
               </div>
 
-              <div className="mt-10 overflow-hidden rounded-2xl border border-white/10">
-                <table className="w-full text-sm text-white/70">
+              <div className="overflow-hidden rounded-2xl border border-border-color bg-surface-muted">
+                <table className="w-full text-base">
                   <tbody>
                     {weeklyHours.map(({ day, label, hours }) => (
-                      <tr key={day} className="border-b border-white/10 last:border-0">
-                        <td className="px-4 py-3 font-medium text-white/80">
+                      <tr key={day} className="border-b border-border-color last:border-0">
+                        <td className="px-5 py-3 font-medium text-foreground">
                           {label}
                         </td>
-                        <td className="px-4 py-3 text-right">{hours}</td>
+                        <td
+                          className={`px-5 py-3 text-right ${
+                            hours === "Closed" ? "text-red-400" : "text-foreground"
+                          }`}
+                        >
+                          {hours}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -330,13 +399,14 @@ export default function Home() {
 
             <motion.div
               variants={itemVariants}
-              className="overflow-hidden rounded-2xl border border-white/10"
+              className="overflow-hidden rounded-2xl border border-accent/40"
+              style={{ minHeight: 400 }}
             >
               <iframe
                 src={businessInfo.address.embedUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: 420 }}
+                style={{ border: 0, minHeight: 400 }}
                 loading="lazy"
                 title={`Map showing ${businessInfo.name}`}
               />
