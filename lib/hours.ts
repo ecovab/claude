@@ -47,8 +47,16 @@ function parseTimeToMinutes(time: string): number | null {
   return hours * 60 + minutes;
 }
 
+const SAST_OFFSET_MINUTES = 2 * 60;
+
+function toSAST(date: Date): Date {
+  const utcMs = date.getTime() + date.getTimezoneOffset() * 60_000;
+  return new Date(utcMs + SAST_OFFSET_MINUTES * 60_000);
+}
+
 export function isOpenNow(now: Date = new Date()): boolean {
-  const dayKey = DAY_KEYS[now.getDay()];
+  const sast = toSAST(now);
+  const dayKey = DAY_KEYS[sast.getDay()];
   const entry = businessInfo.hours[dayKey];
   if (entry.closed) return false;
 
@@ -56,6 +64,6 @@ export function isOpenNow(now: Date = new Date()): boolean {
   const closeMinutes = parseTimeToMinutes(entry.close);
   if (openMinutes === null || closeMinutes === null) return false;
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const nowMinutes = sast.getHours() * 60 + sast.getMinutes();
   return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
 }
