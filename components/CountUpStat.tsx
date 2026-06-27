@@ -42,12 +42,13 @@ export default function CountUpStat({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      className="text-center"
     >
-      <div className="text-2xl font-bold text-accent sm:text-3xl">{display}</div>
-      <div className="mt-1 text-xs uppercase tracking-wide text-text-muted">
+      <div className="text-[36px] font-extrabold text-white">{display}</div>
+      <div className="mt-1 text-[12px] uppercase tracking-[0.1em] text-[#6B6B6B]">
         {label}
       </div>
     </motion.div>

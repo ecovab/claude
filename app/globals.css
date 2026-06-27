@@ -3,27 +3,27 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #050b18;
-  --foreground: #f5f5f0;
-  --surface: #0d1626;
-  --surface-muted: #11192c;
-  --border-color: #1a2744;
-  --accent: #c9a84c;
-  --accent-soft: rgba(201, 168, 76, 0.12);
-  --accent-secondary: rgba(201, 168, 76, 0.4);
-  --text-muted: #8a9bb8;
+  --background: #0e0e0e;
+  --foreground: #ffffff;
+  --surface: #161616;
+  --surface-muted: #161616;
+  --border-color: #242424;
+  --accent: #e8173a;
+  --accent-soft: rgba(232, 23, 58, 0.12);
+  --accent-secondary: rgba(232, 23, 58, 0.4);
+  --text-muted: #6b6b6b;
 }
 
 .dark {
-  --background: #050b18;
-  --foreground: #f5f5f0;
-  --surface: #0d1626;
-  --surface-muted: #11192c;
-  --border-color: #1a2744;
-  --accent: #c9a84c;
-  --accent-soft: rgba(201, 168, 76, 0.12);
-  --accent-secondary: rgba(201, 168, 76, 0.4);
-  --text-muted: #8a9bb8;
+  --background: #0e0e0e;
+  --foreground: #ffffff;
+  --surface: #161616;
+  --surface-muted: #161616;
+  --border-color: #242424;
+  --accent: #e8173a;
+  --accent-soft: rgba(232, 23, 58, 0.12);
+  --accent-secondary: rgba(232, 23, 58, 0.4);
+  --text-muted: #6b6b6b;
 }
 
 @theme inline {
@@ -36,7 +36,7 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-secondary: var(--accent-secondary);
   --color-text-muted: var(--text-muted);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
