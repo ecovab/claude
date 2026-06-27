@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { isOpenNow } from "@/lib/hours";
 
-export default function OpenStatusBadge() {
+export function OpenStatusBadge() {
   const [open, setOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // Computed client-only: server has no `window`/local time, so this must run post-hydration, not in the lazy initializer.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpen(isOpenNow());
     const interval = setInterval(() => setOpen(isOpenNow()), 60_000);
     return () => clearInterval(interval);
@@ -16,16 +18,14 @@ export default function OpenStatusBadge() {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium uppercase tracking-[0.14em] ${
         open
-          ? "bg-green-100 text-green-700"
-          : "bg-red-100 text-red-700"
+          ? "border-forest-light/40 bg-forest/20 text-forest-light"
+          : "border-bronze/40 bg-bronze/15 text-gold-light"
       }`}
     >
-      <span
-        className={`h-2 w-2 rounded-full ${open ? "bg-green-500" : "bg-red-500"}`}
-      />
-      {open ? "Open Now" : "Closed"}
+      <span className={`h-1.5 w-1.5 rounded-full ${open ? "bg-forest-light" : "bg-bronze"}`} />
+      {open ? "Open Now" : "Closed Now"}
     </span>
   );
 }

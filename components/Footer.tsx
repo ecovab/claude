@@ -1,48 +1,52 @@
-import Link from "next/link";
+import { FaFacebookF, FaInstagram } from "react-icons/fa6";
 import { businessInfo } from "@/lib/business-info";
 import { getWeeklyHours } from "@/lib/hours";
 
-export default function Footer() {
+export function Footer() {
   const weeklyHours = getWeeklyHours();
 
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:grid-cols-3">
+    <footer id="contact-footer" className="relative border-t border-gold/10 bg-ink">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <h3 className="text-lg font-semibold text-zinc-900">{businessInfo.name}</h3>
-          <p className="mt-2 text-sm text-zinc-600">{businessInfo.tagline}</p>
-          <div className="mt-4 flex gap-4">
+          <h3 className="font-display text-xl tracking-[0.15em] text-offwhite">
+            GECKO <span className="text-gradient-gold">LOUNGE</span>
+          </h3>
+          <p className="mt-3 max-w-xs text-sm text-offwhite/60">{businessInfo.description}</p>
+          <div className="mt-5 flex gap-3">
             {businessInfo.socialLinks.facebook && (
               <a
                 href={businessInfo.socialLinks.facebook}
-                className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Gecko Lounge on Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/20 text-gold-light transition-colors hover:bg-gold/10"
               >
-                Facebook
+                <FaFacebookF size={14} />
               </a>
             )}
-            {businessInfo.socialLinks.instagram && (
-              <a
-                href={businessInfo.socialLinks.instagram}
-                className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
-              >
-                Instagram
-              </a>
-            )}
+            <a
+              aria-label="Gecko Lounge on Instagram"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/20 text-gold-light transition-colors hover:bg-gold/10"
+              href="#"
+            >
+              <FaInstagram size={14} />
+            </a>
           </div>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-light/70">
             Contact
           </h4>
-          <ul className="mt-3 space-y-2 text-sm text-zinc-600">
+          <ul className="mt-4 space-y-2 text-sm text-offwhite/60">
             <li>
-              <a href={`tel:${businessInfo.phone.replace(/\s+/g, "")}`} className="hover:text-zinc-900">
+              <a href={`tel:${businessInfo.phoneIntl}`} className="hover:text-offwhite">
                 {businessInfo.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${businessInfo.email}`} className="hover:text-zinc-900">
+              <a href={`mailto:${businessInfo.email}`} className="hover:text-offwhite">
                 {businessInfo.email}
               </a>
             </li>
@@ -54,10 +58,10 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-light/70">
             Hours
           </h4>
-          <ul className="mt-3 space-y-1 text-sm text-zinc-600">
+          <ul className="mt-4 space-y-1.5 text-sm text-offwhite/60">
             {weeklyHours.map(({ day, label, hours }) => (
               <li key={day} className="flex justify-between gap-4">
                 <span>{label}</span>
@@ -66,13 +70,24 @@ export default function Footer() {
             ))}
           </ul>
         </div>
+
+        <div>
+          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-light/70">
+            Find Us
+          </h4>
+          <a
+            href={businessInfo.address.googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block text-sm text-gold-light underline-offset-4 hover:underline"
+          >
+            Get Directions &rarr;
+          </a>
+        </div>
       </div>
 
-      <div className="border-t border-zinc-200 py-4 text-center text-xs text-zinc-500">
-        © {new Date().getFullYear()} {businessInfo.name}. All rights reserved.{" "}
-        <Link href="/contact" className="underline hover:text-zinc-700">
-          Get in touch
-        </Link>
+      <div className="border-t border-gold/10 py-6 text-center text-xs text-offwhite/40">
+        &copy; {new Date().getFullYear()} {businessInfo.fullName}. All rights reserved.
       </div>
     </footer>
   );

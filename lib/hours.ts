@@ -59,3 +59,7 @@ export function isOpenNow(now: Date = new Date()): boolean {
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
 }
+
+export function getTodayHours(now: Date = new Date()): string {
+  return formatHours(DAY_KEYS[now.getDay()]);
+}
