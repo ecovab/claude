@@ -7,8 +7,9 @@ export default function OpenStatusBadge() {
   const [open, setOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setOpen(isOpenNow());
-    const interval = setInterval(() => setOpen(isOpenNow()), 60_000);
+    const tick = () => setOpen(isOpenNow());
+    tick();
+    const interval = setInterval(tick, 60_000);
     return () => clearInterval(interval);
   }, []);
 
@@ -16,14 +17,14 @@ export default function OpenStatusBadge() {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium ${
         open
-          ? "bg-green-100 text-green-700"
-          : "bg-red-100 text-red-700"
+          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
+          : "border-red-500/30 bg-red-500/10 text-red-500"
       }`}
     >
       <span
-        className={`h-2 w-2 rounded-full ${open ? "bg-green-500" : "bg-red-500"}`}
+        className={`h-2 w-2 rounded-full ${open ? "bg-emerald-500" : "bg-red-500"}`}
       />
       {open ? "Open Now" : "Closed"}
     </span>
