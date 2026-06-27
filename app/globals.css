@@ -1,26 +1,404 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --void: #07070a;
+  --surface: #0e0e14;
+  --border: rgba(255, 255, 255, 0.07);
+  --mint: #00e87a;
+  --mint-dim: rgba(0, 232, 122, 0.12);
+  --ember: #ff4d1c;
+  --warm: #ede8e0;
+  --muted: #4a4a5a;
+  --display: var(--font-syne), sans-serif;
+  --body: var(--font-inter), sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background: var(--void);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--void);
+  color: var(--warm);
+  font-family: var(--body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--mint-dim);
+  color: var(--mint);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--warm);
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+/* ---------- color & font utilities ---------- */
+.text-warm { color: var(--warm); }
+.text-mint { color: var(--mint); }
+.text-muted { color: var(--muted); }
+.text-void { color: var(--void); }
+.text-ember { color: var(--ember); }
+.bg-void { background-color: var(--void); }
+.bg-surface { background-color: var(--surface); }
+.bg-mint { background-color: var(--mint); }
+.bg-mint-dim { background-color: var(--mint-dim); }
+.bg-ember { background-color: var(--ember); }
+.font-display { font-family: var(--display); }
+.font-body { font-family: var(--body); }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(24px);
+  background: rgba(7, 7, 10, 0.6);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s var(--ease-out-expo);
+}
+
+.nav-scrolled {
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--warm);
+}
+
+.nav-link {
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  transition: color 0.3s var(--ease-out-expo);
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 1px;
+  background: var(--mint);
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.nav-link:hover {
+  color: var(--mint);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-cta .magnetic-button-hit {
+  background: var(--mint);
+  color: var(--void);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ---------- MagneticButton ---------- */
+.magnetic-button {
+  display: inline-block;
+  will-change: transform;
+}
+
+.magnetic-button-content {
+  display: inline-block;
+}
+
+/* ---------- SplitText ---------- */
+.split-text-word {
+  /* Without this, an inline-block's shrink-to-fit width gets clamped to the
+     remaining line width, and its char spans reflow inside that clamped
+     width — splitting the word mid-character on narrow viewports. */
+  white-space: nowrap;
+}
+
+.split-text-char {
+  will-change: transform, opacity;
+}
+
+/* ---------- MarqueeStrip ---------- */
+.marquee-strip {
+  border-top: 1px solid var(--border);
+}
+
+.marquee-strip:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-track {
+  animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee-content {
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+  background: var(--void);
+}
+
+.hero-canvas {
+  z-index: 0;
+}
+
+.hero-headline {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.75rem, 8.5vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+
+/* Below this width the 2.75rem clamp floor makes the widest split word
+   (e.g. "ECOSYSTEM.") wider than the viewport, since white-space: nowrap
+   on .split-text-word stops it from reflowing internally. Scale the floor
+   down with a steeper vw coefficient so it stays inside the container. */
+@media (max-width: 640px) {
+  .hero-headline {
+    font-size: clamp(1.6rem, 7.5vw, 9rem);
+  }
+}
+
+.hero-sub {
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+}
+
+.hero-cta-primary .magnetic-button-hit {
+  background: var(--mint);
+  color: var(--void);
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+.hero-cta-secondary .magnetic-button-hit {
+  border: 1px solid var(--border);
+  color: var(--warm);
+  transition: border-color 0.3s var(--ease-out-expo);
+}
+
+.hero-cta-secondary .magnetic-button-hit:hover {
+  border-color: var(--mint);
+}
+
+/* ---------- Services ---------- */
+.service-row {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.services-list > div:first-child .service-row {
+  border-top: 1px solid var(--border);
+}
+
+.service-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--warm);
+}
+
+.service-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+/* ---------- WhyEcova ---------- */
+.why-statement {
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.reason-dash {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.why-reason h4 {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.testimonial {
+  border-color: var(--mint);
+  font-style: italic;
+}
+
+.testimonial footer {
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+/* ---------- Process ---------- */
+.process-phase {
+  font-weight: 800;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 1;
+  will-change: transform, opacity;
+}
+
+/* "DISCOVERY" at the 2.5rem floor is wider than a mobile viewport's content
+   area, clipping past the edge. Drop the floor and lean on vw scaling. */
+@media (max-width: 640px) {
+  .process-phase {
+    font-size: clamp(1.6rem, 8vw, 5rem);
+  }
+}
+
+.process-description {
+  font-size: 1rem;
+}
+
+/* ---------- Contact ---------- */
+.contact-label {
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.contact-block {
+  border-bottom: 1px solid var(--border);
+}
+
+.contact-block span:first-child {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.copied-tooltip,
+.whatsapp-hint {
+  font-size: 0.8rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.whatsapp-hint {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+
+.phone-block:hover .whatsapp-hint {
+  opacity: 1;
+}
+
+.contact-meta {
+  font-size: 0.85rem;
+}
+
+.form-field {
+  border-bottom: 1px solid var(--border);
+}
+
+.form-field::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--mint);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.form-field:focus-within::after {
+  transform: scaleX(1);
+}
+
+.form-field select option {
+  background: var(--surface);
+  color: var(--warm);
+}
+
+.submit-button {
+  background: var(--ember);
+  color: var(--void);
+  font-family: var(--display);
+  font-weight: 700;
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+.submit-button:hover {
+  transform: scale(1.02);
+}
+
+.sent-message {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--border);
+}
+
+.footer-line-1 {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.footer-line-2 {
+  font-size: 0.75rem;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }

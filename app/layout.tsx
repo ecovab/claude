@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Syne, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { businessInfo } from "@/lib/business-info";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const syne = Syne({
   subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-syne",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
   title: `${businessInfo.name} | ${businessInfo.tagline}`,
-  description: businessInfo.tagline,
+  description: "We build websites that work while you sleep. Web design and digital growth systems for South African businesses.",
 };
 
 export default function RootLayout({
@@ -26,13 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-white text-zinc-900">
-        <Header />
-        <main className="flex-1">{children}</main>
+    <html lang="en" className={`${syne.variable} ${inter.variable}`}>
+      <body>
+        <Nav />
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
