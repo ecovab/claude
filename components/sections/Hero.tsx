@@ -1,11 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { FaChevronDown } from "react-icons/fa6";
 import { useCanRender3D } from "@/hooks/useCanRender3D";
 import { MagneticButton } from "@/components/MagneticButton";
 import { OpenStatusBadge } from "@/components/OpenStatusBadge";
+import { Atmosphere } from "@/components/Atmosphere";
 import { businessInfo } from "@/lib/business-info";
 import { useLenis } from "lenis/react";
 
@@ -45,6 +47,13 @@ function AnimatedWord({ word, offset }: { word: string; offset: number }) {
 export function Hero() {
   const canRender3D = useCanRender3D();
   const lenis = useLenis();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const depthY = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const depthScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
 
   function scrollToAbout() {
     const target = document.querySelector("#about");
@@ -58,9 +67,16 @@ export function Hero() {
   }
 
   return (
-    <section id="top" className="relative flex min-h-screen items-center overflow-hidden bg-ink">
-      {/* Ambient background gradients — slow moving warm light */}
-      <div className="absolute inset-0">
+    <section ref={sectionRef} id="top" className="relative flex min-h-screen items-center overflow-hidden bg-ink">
+      {/* Cinematic dolly-in on load, then a slow parallax drift/zoom as the room recedes on scroll */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ scale: 1.12, opacity: 0.5 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2.6, ease: [0.16, 1, 0.3, 1] }}
+        style={{ y: depthY, scale: depthScale }}
+      >
+        {/* Ambient background gradients — slow moving warm light */}
         <motion.div
           className="absolute -top-1/3 left-1/4 h-[60vmax] w-[60vmax] rounded-full bg-bronze/20 blur-[120px]"
           animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
@@ -76,17 +92,37 @@ export function Hero() {
           animate={{ scale: [1, 1.15, 1] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-      </div>
 
-      {canRender3D && (
-        <div className="absolute inset-0">
-          <HeroScene />
-        </div>
-      )}
+        {/* Atmospheric haze near the horizon */}
+        <motion.div
+          className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-bronze/15 via-ember/5 to-transparent"
+          animate={{ opacity: [0.5, 0.85, 0.5] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Subtle lens flare, anchored near the gem's screen position */}
+        <motion.div
+          className="absolute right-[14%] top-[28%] h-3 w-3 rounded-full bg-gold-light"
+          style={{ boxShadow: "0 0 40px 10px rgba(232,205,135,0.55), 0 0 120px 60px rgba(255,122,60,0.12)" }}
+          animate={{ opacity: [0.4, 0.9, 0.4] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {canRender3D && (
+          <div className="absolute inset-0">
+            <HeroScene />
+          </div>
+        )}
+
+        <Atmosphere density={7} />
+      </motion.div>
 
       <div className="noise-overlay" />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-24">
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-24"
+      >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -95,14 +131,26 @@ export function Hero() {
           <OpenStatusBadge />
         </motion.div>
 
-        <h1 className="mt-6 font-display text-[15vw] leading-[0.95] text-offwhite sm:text-[10vw] lg:text-[7.2vw]">
-          <span className="block">
-            <AnimatedWord word={TITLE_LINE_1} offset={0} />
-          </span>
-          <span className="block text-gradient-gold">
-            <AnimatedWord word={TITLE_LINE_2} offset={TITLE_LINE_1.length} />
-          </span>
-        </h1>
+        <div className="relative">
+          <h1 className="mt-6 font-display text-[15vw] leading-[0.95] text-offwhite sm:text-[10vw] lg:text-[7.2vw]">
+            <span className="block">
+              <AnimatedWord word={TITLE_LINE_1} offset={0} />
+            </span>
+            <span className="block text-gradient-gold">
+              <AnimatedWord word={TITLE_LINE_2} offset={TITLE_LINE_1.length} />
+            </span>
+          </h1>
+
+          {/* Reflection: a soft mirrored echo, as if the title is catching light off a polished bar top */}
+          <h1
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-full -mt-2 select-none font-display text-[15vw] leading-[0.95] text-offwhite opacity-[0.08] blur-[2px] sm:text-[10vw] lg:text-[7.2vw]"
+            style={{ transform: "scaleY(-1)", maskImage: "linear-gradient(to bottom, black, transparent 70%)" }}
+          >
+            <span className="block">{TITLE_LINE_1}</span>
+            <span className="block">{TITLE_LINE_2}</span>
+          </h1>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -132,7 +180,7 @@ export function Hero() {
             View Menu &rarr;
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
       <motion.button
         onClick={scrollToAbout}
