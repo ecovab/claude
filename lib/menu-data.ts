@@ -22,6 +22,8 @@ export interface MenuItem {
   ingredients: string[];
   price: string;
   popular?: boolean;
+  /** Suggested drink to pair this dish with — shown when the card is expanded. */
+  pairing?: string;
 }
 
 export const MENU_CATEGORIES: MenuCategory[] = [
@@ -45,6 +47,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["snails", "blue cheese", "cream", "garlic", "toasted bread"],
     price: "R 89",
     popular: true,
+    pairing: "Western Cape Wine",
   },
   {
     id: "crispy-calamari",
@@ -53,6 +56,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Lightly floured and fried to order, served with tangy tartare and a wedge of lemon.",
     ingredients: ["calamari", "lemon", "tartare sauce", "side salad"],
     price: "R 79",
+    pairing: "Draught Beer",
   },
   {
     id: "loaded-onion-rings",
@@ -61,6 +65,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Beer-battered onion rings stacked high with melted cheddar and smoky bacon bits.",
     ingredients: ["onion", "beer batter", "cheddar", "bacon"],
     price: "R 69",
+    pairing: "Draught Beer",
   },
   {
     id: "buffalo-wings",
@@ -69,6 +74,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Free-range chicken wings tossed in house buffalo sauce, served with ranch dip.",
     ingredients: ["chicken wings", "buffalo sauce", "ranch dip", "celery"],
     price: "R 95",
+    pairing: "Sundowner Spritz",
   },
   {
     id: "grilled-kingklip",
@@ -78,6 +84,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["kingklip", "lemon butter", "seasonal veg", "rice"],
     price: "R 175",
     popular: true,
+    pairing: "Western Cape Wine",
   },
   {
     id: "seafood-platter",
@@ -87,6 +94,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["prawns", "calamari", "mussels", "line fish", "garlic butter"],
     price: "R 395",
     popular: true,
+    pairing: "Sundowner Spritz",
   },
   {
     id: "garlic-prawns",
@@ -95,6 +103,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Pan-seared prawns in a sizzling garlic, chilli and white wine butter.",
     ingredients: ["prawns", "garlic", "chilli", "white wine", "butter"],
     price: "R 165",
+    pairing: "Western Cape Wine",
   },
   {
     id: "fillet-steak",
@@ -104,6 +113,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["beef fillet", "cracked pepper", "pepper sauce", "chips"],
     price: "R 215",
     popular: true,
+    pairing: "Western Cape Wine",
   },
   {
     id: "pork-ribs",
@@ -113,6 +123,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["pork ribs", "house glaze", "coleslaw", "fries"],
     price: "R 195",
     popular: true,
+    pairing: "Draught Beer",
   },
   {
     id: "rump-steak",
@@ -121,6 +132,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "300g rump, char-marked over open flame, served with a choice of sauce.",
     ingredients: ["beef rump", "garlic butter", "mushroom sauce", "side"],
     price: "R 165",
+    pairing: "Western Cape Wine",
   },
   {
     id: "mixed-grill",
@@ -129,6 +141,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Rump, pork rib, chicken sosatie and boerewors — for the genuinely hungry.",
     ingredients: ["rump", "pork ribs", "chicken sosatie", "boerewors"],
     price: "R 245",
+    pairing: "Draught Beer",
   },
   {
     id: "classic-cheeseburger",
@@ -138,6 +151,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["beef patty", "cheddar", "lettuce", "house relish"],
     price: "R 115",
     popular: true,
+    pairing: "Draught Beer",
   },
   {
     id: "rib-burger",
@@ -146,6 +160,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Beef patty topped with pulled rib meat and a smoky BBQ glaze.",
     ingredients: ["beef patty", "pulled rib meat", "BBQ glaze", "onion crisps"],
     price: "R 139",
+    pairing: "Smoked Whiskey Sour",
   },
   {
     id: "halloumi-burger",
@@ -154,6 +169,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Char-grilled halloumi, rocket, roasted peppers and basil pesto mayo.",
     ingredients: ["halloumi", "rocket", "roasted peppers", "pesto mayo"],
     price: "R 119",
+    pairing: "Sundowner Spritz",
   },
   {
     id: "margherita-pizza",
@@ -162,6 +178,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "San Marzano tomato, fresh mozzarella and basil on a hand-stretched base.",
     ingredients: ["tomato", "mozzarella", "basil", "olive oil"],
     price: "R 99",
+    pairing: "Western Cape Wine",
   },
   {
     id: "gecko-special-pizza",
@@ -171,6 +188,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["bacon", "salami", "mushroom", "peppers", "cheese"],
     price: "R 139",
     popular: true,
+    pairing: "Draught Beer",
   },
   {
     id: "seafood-pizza",
@@ -179,6 +197,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Prawns and calamari over a creamy garlic base, finished with parsley.",
     ingredients: ["prawns", "calamari", "garlic cream base", "parsley"],
     price: "R 155",
+    pairing: "Western Cape Wine",
   },
   {
     id: "california-roll",
@@ -187,6 +206,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Crab stick, avocado and cucumber, rolled in toasted sesame.",
     ingredients: ["crab stick", "avocado", "cucumber", "sesame"],
     price: "R 85",
+    pairing: "Gecko Mule",
   },
   {
     id: "salmon-rose",
@@ -196,6 +216,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["salmon", "sushi rice", "nori", "wasabi"],
     price: "R 175",
     popular: true,
+    pairing: "Sundowner Spritz",
   },
   {
     id: "dragon-roll",
@@ -204,6 +225,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Tempura prawn, cucumber and avocado, topped with eel sauce.",
     ingredients: ["tempura prawn", "avocado", "cucumber", "eel sauce"],
     price: "R 119",
+    pairing: "Gecko Mule",
   },
   {
     id: "draught-beer",
@@ -262,6 +284,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ingredients: ["waffle", "vanilla ice cream", "chocolate sauce", "nuts"],
     price: "R 75",
     popular: true,
+    pairing: "Smoked Whiskey Sour",
   },
   {
     id: "chocolate-brownie",
@@ -270,6 +293,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Warm brownie with a melting centre, served with vanilla ice cream.",
     ingredients: ["chocolate", "brownie", "vanilla ice cream"],
     price: "R 69",
+    pairing: "Smoked Whiskey Sour",
   },
   {
     id: "malva-pudding",
@@ -278,5 +302,6 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "A South African classic — warm, spongy and soaked in sweet sauce.",
     ingredients: ["malva sponge", "caramel sauce", "cream"],
     price: "R 65",
+    pairing: "Western Cape Wine",
   },
 ];
