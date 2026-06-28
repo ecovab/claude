@@ -4,44 +4,56 @@ import { motion } from "framer-motion";
 import { GiCupcake, GiSteak, GiWineBottle } from "react-icons/gi";
 import { GiMartini } from "react-icons/gi";
 import { TiltCard } from "@/components/TiltCard";
-import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { CinematicScene, type SceneMood } from "@/components/CinematicScene";
 import { GiFishCooked } from "react-icons/gi";
 
-const SIGNATURES = [
+const SIGNATURES: {
+  title: string;
+  description: string;
+  price: string;
+  icon: typeof GiFishCooked;
+  mood: SceneMood;
+  shotLabel: string;
+}[] = [
   {
     title: "Seafood Platter",
     description: "Prawns, calamari, mussels and grilled line fish, built for sharing.",
     price: "R 395",
     icon: GiFishCooked,
-    tone: "forest" as const,
+    mood: "forest",
+    shotLabel: "Seafood platter, fresh off the coals",
   },
   {
     title: "Premium Steaks",
     description: "Grass-fed fillet and rump, char-grilled over open flame to order.",
     price: "From R 165",
     icon: GiSteak,
-    tone: "ember" as const,
+    mood: "ember",
+    shotLabel: "Fillet steak, char-grilled to order",
   },
   {
     title: "House Cocktails",
     description: "The Gecko Mule and other terrace favourites, shaken to order.",
     price: "From R 89",
     icon: GiMartini,
-    tone: "gold" as const,
+    mood: "amber",
+    shotLabel: "Signature cocktail, bar light glinting off the glass",
   },
   {
     title: "Boland Wine",
     description: "A rotating list of Western Cape reds and whites by the glass.",
     price: "From R 55",
     icon: GiWineBottle,
-    tone: "gold" as const,
+    mood: "amber",
+    shotLabel: "Western Cape wine, golden hour through the glass",
   },
   {
     title: "House Desserts",
     description: "Belgian waffles and malva pudding — the table always shares.",
     price: "From R 65",
     icon: GiCupcake,
-    tone: "ember" as const,
+    mood: "ember",
+    shotLabel: "House dessert, warm and ready to share",
   },
 ];
 
@@ -75,7 +87,7 @@ export function SignatureDishes() {
             >
               <TiltCard className="group overflow-hidden rounded-2xl border border-gold/10 bg-charcoal">
                 <div className="relative aspect-[5/4] overflow-hidden">
-                  <PlaceholderImage label={dish.title} icon={dish.icon} tone={dish.tone} />
+                  <CinematicScene label={dish.shotLabel} icon={dish.icon} mood={dish.mood} parallax />
                 </div>
                 <div className="p-6">
                   <div className="flex items-baseline justify-between gap-3">

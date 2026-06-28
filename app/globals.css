@@ -119,6 +119,53 @@ html.lenis body {
     padding-top: clamp(5rem, 10vw, 9rem);
     padding-bottom: clamp(5rem, 10vw, 9rem);
   }
+
+  .dust-mote {
+    animation-name: dust-float;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+
+  .light-ray {
+    animation-name: ray-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+}
+
+@keyframes dust-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(6px, -55vh, 0) scale(1);
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translate3d(-4px, -110vh, 0) scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes ray-drift {
+  0%,
+  100% {
+    transform: translateX(-4%) rotate(-2deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(4%) rotate(2deg);
+    opacity: 0.85;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

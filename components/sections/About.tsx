@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GiBarbecue, GiPartyPopper, GiSushis } from "react-icons/gi";
-import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { CinematicScene } from "@/components/CinematicScene";
 
 const TIMELINE = [
   {
@@ -71,7 +71,12 @@ export function About() {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="relative aspect-[4/5] overflow-hidden rounded-2xl glow-gold"
           >
-            <PlaceholderImage label="Gecko Lounge terrace at golden hour" tone="ember" className="rounded-2xl" />
+            <CinematicScene
+              label="Golden-hour terrace, regulars settling in"
+              mood="goldenHour"
+              parallax
+              className="rounded-2xl"
+            />
           </motion.div>
         </div>
 
