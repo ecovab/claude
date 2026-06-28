@@ -1,11 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { GiCupcake, GiSteak, GiWineBottle } from "react-icons/gi";
 import { GiMartini } from "react-icons/gi";
 import { TiltCard } from "@/components/TiltCard";
 import { CinematicScene, type SceneMood } from "@/components/CinematicScene";
 import { GiFishCooked } from "react-icons/gi";
+import { Reveal } from "@/components/Reveal";
+import { SectionGlow } from "@/components/SectionGlow";
+import { SectionSeam } from "@/components/SectionSeam";
 
 const SIGNATURES: {
   title: string;
@@ -58,23 +62,24 @@ const SIGNATURES: {
 ];
 
 export function SignatureDishes() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const glowY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+
   return (
-    <section id="dishes" className="section-padding relative bg-ink">
-      <div className="mx-auto max-w-7xl px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-          className="max-w-xl"
-        >
+    <section ref={sectionRef} id="dishes" className="section-padding relative overflow-hidden bg-ink">
+      <SectionSeam from="charcoal" />
+      <SectionGlow tone="ember" className="-right-1/4 top-1/3" style={{ y: glowY }} />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        <Reveal className="max-w-xl">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-light/70">
             Signature
           </span>
           <h2 className="mt-4 font-display text-4xl text-offwhite sm:text-5xl">
             What Gecko does <span className="text-gradient-gold">best</span>
           </h2>
-        </motion.div>
+        </Reveal>
 
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {SIGNATURES.map((dish, index) => (

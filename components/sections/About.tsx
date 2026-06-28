@@ -1,8 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { GiBarbecue, GiPartyPopper, GiSushis } from "react-icons/gi";
 import { CinematicScene } from "@/components/CinematicScene";
+import { Reveal } from "@/components/Reveal";
+import { SectionGlow } from "@/components/SectionGlow";
+import { SectionSeam } from "@/components/SectionSeam";
 
 const TIMELINE = [
   {
@@ -34,16 +38,18 @@ const fadeUp = {
 };
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const glowY = useTransform(scrollYProgress, [0, 1], [-60, 60]);
+
   return (
-    <section id="about" className="section-padding relative bg-charcoal">
-      <div className="mx-auto max-w-7xl px-6">
+    <section ref={sectionRef} id="about" className="section-padding relative overflow-hidden bg-charcoal">
+      <SectionSeam from="ink" />
+      <SectionGlow tone="forest" className="-left-1/4 top-0" style={{ y: glowY }} />
+
+      <div className="relative mx-auto max-w-7xl px-6">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-          >
+          <Reveal>
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-light/70">
               Our Story
             </span>
@@ -62,7 +68,7 @@ export function About() {
               twelve on game day, the kitchen and the bar run on the same philosophy: do it
               properly, keep it relaxed.
             </p>
-          </motion.div>
+          </Reveal>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

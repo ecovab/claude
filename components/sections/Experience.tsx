@@ -1,26 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { EXPERIENCES } from "@/lib/experiences-data";
+import { Reveal } from "@/components/Reveal";
+import { SectionGlow } from "@/components/SectionGlow";
+import { SectionSeam } from "@/components/SectionSeam";
 
 export function Experience() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const glowY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+
   return (
-    <section id="experience" className="section-padding relative bg-ink">
-      <div className="mx-auto max-w-7xl px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-          className="max-w-xl"
-        >
+    <section ref={sectionRef} id="experience" className="section-padding relative overflow-hidden bg-ink">
+      <SectionSeam from="charcoal" />
+      <SectionGlow tone="gold" className="-left-1/4 bottom-0" style={{ y: glowY }} />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        <Reveal className="max-w-xl">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-light/70">
             The Experience
           </span>
           <h2 className="mt-4 font-display text-4xl text-offwhite sm:text-5xl">
             Six reasons to <span className="text-gradient-gold">pull up a chair</span>
           </h2>
-        </motion.div>
+        </Reveal>
 
         <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-gold/10 bg-gold/10 sm:grid-cols-2 lg:grid-cols-3">
           {EXPERIENCES.map((experience, index) => (
