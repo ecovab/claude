@@ -1,13 +1,30 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { FaQuoteLeft, FaStar } from "react-icons/fa6";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { FaGoogle, FaStar } from "react-icons/fa6";
 import { REVIEWS } from "@/lib/reviews-data";
 import { businessInfo } from "@/lib/business-info";
+import { Reveal } from "@/components/Reveal";
+import { SectionGlow } from "@/components/SectionGlow";
+import { SectionSeam } from "@/components/SectionSeam";
+
+const AVATAR_TONES = ["bg-gold/20 text-gold-light", "bg-bronze/25 text-bronze", "bg-forest/25 text-forest-light"];
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 export function Reviews() {
   const [index, setIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const glowY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
 
   useEffect(() => {
     const timer = setInterval(() => setIndex((i) => (i + 1) % REVIEWS.length), 6000);
@@ -17,14 +34,12 @@ export function Reviews() {
   const review = REVIEWS[index];
 
   return (
-    <section id="reviews" className="section-padding relative bg-charcoal">
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-        >
+    <section ref={sectionRef} id="reviews" className="section-padding relative overflow-hidden bg-charcoal">
+      <SectionSeam from="ink" />
+      <SectionGlow tone="gold" className="-left-1/4 top-0" style={{ y: glowY }} />
+
+      <div className="relative mx-auto max-w-4xl px-6 text-center">
+        <Reveal>
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-light/70">
             Word on the street
           </span>
@@ -42,9 +57,9 @@ export function Reviews() {
             <span className="text-offwhite/30">&middot;</span>
             <span>{businessInfo.reviewCount}+ Google reviews</span>
           </div>
-        </motion.div>
+        </Reveal>
 
-        <div className="relative mt-14 min-h-[220px]">
+        <div className="relative mt-14 min-h-[240px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={review.id}
@@ -52,17 +67,34 @@ export function Reviews() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="glass-panel rounded-2xl p-10"
+              className="glass-panel rounded-2xl p-8 text-left sm:p-10"
             >
-              <FaQuoteLeft className="mx-auto text-2xl text-bronze" />
-              <p className="mt-6 font-serif text-xl leading-relaxed text-offwhite/85 sm:text-2xl">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${AVATAR_TONES[index % AVATAR_TONES.length]}`}
+                  >
+                    {getInitials(review.name)}
+                  </span>
+                  <div>
+                    <p className="font-medium text-offwhite/90">{review.name}</p>
+                    <div className="flex items-center gap-1.5 text-xs text-offwhite/45">
+                      {review.source === "Google" && <FaGoogle aria-hidden="true" />}
+                      <span>{review.source}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <span className="flex shrink-0 items-center gap-0.5 text-gold-light">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <FaStar key={i} size={13} className={i < review.rating ? "" : "opacity-25"} />
+                  ))}
+                </span>
+              </div>
+
+              <p className="mt-6 font-serif text-lg leading-relaxed text-offwhite/85 sm:text-xl">
                 &ldquo;{review.quote}&rdquo;
               </p>
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-offwhite/50">
-                <span className="font-medium text-offwhite/80">{review.name}</span>
-                <span>&middot;</span>
-                <span>{review.source}</span>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>
